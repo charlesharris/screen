@@ -1,3 +1,29 @@
+# Instructions to run submitted code
+
+- Build base data image
+```
+docker build -t screen-data:latest .
+```
+
+- Run image
+```
+docker run --rm it screen-data:latest /bin/bash
+```
+
+All code lives in `/root/src/`
+
+## Average number of fields
+- `cd /root/src && ./avg.sh`
+
+## Word count of every value across all datasets
+- `cd /root/src && ./value_count.sh`
+- Output will be in `/root/src/value_count.csv`
+
+## Total number of rows in all datasets
+- `cd /root/src && ./total.sh`
+
+
+
 # Instructions
 
 - Build this docker image

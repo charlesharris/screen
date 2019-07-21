@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:jessie AS init
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -6,4 +6,15 @@ RUN apt-get update && apt-get install -y \
     jq
 
 WORKDIR /root
-RUN ["/bin/bash", "-c", "mkdir data && cd data && while read i; do git clone $i; done < <(curl -s https://api.github.com/orgs/datasets/repos?per_page=100 | jq -r '.[].clone_url')"]
+
+COPY docker/init/mkdata.sh /root/mkdata.sh
+RUN chmod a+x mkdata.sh
+
+RUN ./mkdata.sh
+
+# Debian uses mawk by default, which can't handle
+# some of the files with large field counts, so we'll
+# use GNU awk instead.
+RUN apt-get install -y gawk
+
+COPY ./docker/awk/* ./src/
