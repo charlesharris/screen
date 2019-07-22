@@ -2,7 +2,7 @@ import csv
 import sys
 from glob import glob
 
-def _gen_files(source_dir='/root/data/'):
+def __gen_files(source_dir='/root/data/'):
     depth = 5
     dir_splat = ''
     for d in range(0,depth):
@@ -10,7 +10,7 @@ def _gen_files(source_dir='/root/data/'):
         for filepath in glob(source_dir + '/' + dir_splat + '*.csv'):
             yield filepath
 
-def _print_exception():
+def __print_exception():
     print(sys.exc_info())
 
 def avg():
@@ -18,7 +18,7 @@ def avg():
     field_count = 0
 
     try:
-        for file in _gen_files():
+        for file in __gen_files():
             file_count += 1
 
             with open(file, encoding='ISO-8859-1') as f:
@@ -29,12 +29,12 @@ def avg():
                     break
         print(str(field_count/file_count))
     except(Exception):
-        _print_exception()
+        __print_exception()
 
 def total():
     lines = 0
     try:
-        for file in _gen_files():
+        for file in __gen_files():
             with open(file, encoding='ISO-8859-1') as f:
                 csv_reader = csv.reader(f, dialect='excel')
 
@@ -42,12 +42,12 @@ def total():
                     lines += 1
         print(lines)
     except(Exception):
-        _print_exception()
+        __print_exception()
 
 def value_counts():
     try:
         value_counts = {}
-        for file in _gen_files():
+        for file in __gen_files():
             with open(file, encoding='ISO-8859-1') as f:
                 csv_reader = csv.reader(f, dialect='excel')
 
@@ -57,14 +57,17 @@ def value_counts():
                             value_counts[value] += 1
                         else:
                             value_counts[value] = 1
-        
-        with value_counts_csv = open('/root/src/value_counts.csv', 'w'):
-            csv_writer = csv.writer(value_counts_csv)
-        
 
+        with open('/root/src/value_counts.csv', 'w', encoding='utf-8') as value_counts_csv:
+            csv_writer = csv.writer(value_counts_csv, quoting=csv.QUOTE_MINIMAL)
+            csv_writer.writerow(['value', 'count'])
+            for value in value_counts:
+                csv_writer.writerow(['"{value}"'.format(value=value), value_counts[value]])
+                #csv_writer.writerow(['"{value}"'.format(value=value.replace('"', '\"')), value_counts[value]])
     except(Exception):
-        _print_exception()
+        __print_exception()
 
 
 avg()
 total()
+value_counts()
