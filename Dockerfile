@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:jessie AS init
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -6,4 +6,14 @@ RUN apt-get update && apt-get install -y \
     jq
 
 WORKDIR /root
-RUN ["/bin/bash", "-c", "mkdir data && cd data && while read i; do git clone $i; done < <(curl -s https://api.github.com/orgs/datasets/repos?per_page=100 | jq -r '.[].clone_url')"]
+
+COPY docker/init/mkdata.sh /root/mkdata.sh
+RUN chmod a+x mkdata.sh
+
+RUN ./mkdata.sh
+
+RUN apt-get install -y \
+  python3 \
+  python3-pip
+
+COPY ./docker/python/* ./src/
