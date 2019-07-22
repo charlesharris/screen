@@ -17,4 +17,8 @@ RUN ./mkdata.sh
 # use GNU awk instead.
 RUN apt-get install -y gawk
 
+
+RUN mv /root/data/geoip2-ipv4/data/geoip2-ipv4.csv /root/data/geoip2-ipv4/data/geoip2-ipv4.csv.gross \
+ && tr  \\n </root/data/geoip2-ipv4/data/geoip2-ipv4.csv.gross >/root/data/geoip2-ipv4/data/geoip2-ipv4.csv
+
 COPY ./docker/awk/* ./src/
