@@ -1,3 +1,17 @@
+# Instructions for running solutions
+
+- Build and run image:
+  - `docker build -t screen-data:latest . && docker run --rm -it screen-data:latest /bin/bash`
+- CLI solutions live in `/root/src/awk/` and are generally shell scripts wrapping some AWK scripts:
+  - `cd /root/src/awk && ./avg.sh`
+  - `cd /root/src/awk && ./total.sh`
+  - `cd /root/src/awk && ./value_counts.sh`
+- Python solutions are in a single script in `/root/src/python/`:
+  - `cd /root/src/python && ./screen.py`
+
+
+
+
 # Instructions
 
 - Build this docker image
